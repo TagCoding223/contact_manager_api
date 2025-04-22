@@ -13,7 +13,7 @@ import com.scmbackend.entities.Contact;
 
 
 @Component
-@RepositoryEventHandler
+@RepositoryEventHandler(Contact.class)
 public class ContactEventHandler {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

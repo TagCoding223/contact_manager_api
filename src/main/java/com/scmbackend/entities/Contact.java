@@ -29,7 +29,7 @@ public class Contact {
     @Column(unique = true, nullable = false)
     @Email(message = "Email must be a valid email address.")
     private String email;
-    
+
     @Size(max = 500, message = "Address must not exceed 2000 charaters.")
     private String address;
 
@@ -56,3 +56,21 @@ public class Contact {
     @ManyToOne
     private User user;
 }
+
+// to create a user the format of json body is:
+/*
+ * {
+ * "name":"Dev Das",
+ * "email":"dev@gmail.com",
+ * "address":"dev Street",
+ * "description":"It's dev account about.",
+ * "pictureUrl":"https://example.com/profiles/kumkum.jpg",
+ * "phoneNumber":"7894561230",
+ * "facebookLink":"https://facebook.com",
+ * "linkedinLink":"https://linkedin.in",
+ * "favourite":"false",
+ * "user_id":"65c4d2ef-78e3-49ef-b73f-9c63868dffd5",
+ * "cloudinaryImagePublicId": "",
+ * "user":"http://localhost:8080/api/users/65c4d2ef-78e3-49ef-b73f-9c63868dffd5"
+ * }
+ */

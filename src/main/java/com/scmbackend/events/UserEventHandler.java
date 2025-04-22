@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.scmbackend.entities.User;
 
 @Component
-@RepositoryEventHandler
+@RepositoryEventHandler(User.class)
 public class UserEventHandler {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
