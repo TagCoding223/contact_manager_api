@@ -6,11 +6,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
@@ -21,6 +24,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -53,7 +57,7 @@ public class User {
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number must be valid.")
     private String phoneNumber;
 
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     private boolean emailVerified = false;
 
@@ -63,6 +67,14 @@ public class User {
     private Providers provider = Providers.SELF;
 
     private String emailToken;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new LinkedHashSet<>(); // Use LinkedHashSet for consistency with JPA
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Contact> contacts = new LinkedHashSet<>();
