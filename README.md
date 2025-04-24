@@ -190,6 +190,3 @@ scm_backend/
 │                   └── ScmBackendApplicationTests.java # Test class
 └── target/                   # Compiled bytecode and build artifacts
 ```
-
----
-````
