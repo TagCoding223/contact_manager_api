@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <form id="uploadForm">
+        <label for="image">Select Image:</label>
+        <input type="file" id="image" name="userImage" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        const userId = 'f090c7f1-1a89-441f-b7d5-23d34e5b5e6d'; // Replace with the actual user ID
+        const url = `http://localhost:8080/api/v1/users/${userId}/upload`;
+        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoia3Vta3VtQGdtYWlsLmNvbSIsImlhdCI6MTc0NTQ2NjUxMCwiZXhwIjoxNzQ1NDY3NDEwfQ.xjSD8kLnb_hT7ClV4R1blVDWV0SzANkAH6ez0lxOpx0'; // Replace with your actual Bearer token
+
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const fileInput = document.getElementById('image');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select an image to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('userImage', file);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        ContentType : "multipart/form-data",
+                        Authorization: `Bearer ${token}`, // Add the Bearer token
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                document.getElementById('response').textContent = `Image uploaded successfully: ${JSON.stringify(result)}`;
+            } catch (error) {
+                document.getElementById('response').textContent = `Error uploading image: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
