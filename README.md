@@ -150,3 +150,44 @@ The **Contact Manager API** is a Spring Boot-based backend application designed 
 - Add pagination and sorting for user and contact lists.
 
 ---
+
+## Project Structure
+The project follows a standard Maven-based structure:
+
+```
+scm_backend/
+├── .env                      # Environment variables (not included in version control)
+├── endpoints.txt             # API endpoint details
+├── HELP.md                   # Additional help documentation
+├── mvnw, mvnw.cmd            # Maven wrapper scripts
+├── pom.xml                   # Maven project configuration
+├── scm_backend.sql           # Database schema
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── scmbackend/
+│   │   │           ├── ScmBackendApplication.java       # Main application class
+│   │   │           ├── configuration/                  # Configuration files
+│   │   │           ├── controllers/                    # REST controllers
+│   │   │           ├── dto/                            # Data Transfer Objects
+│   │   │           ├── entities/                       # JPA entities
+│   │   │           ├── events/                         # Event handlers
+│   │   │           ├── exceptions/                     # Custom exceptions
+│   │   │           ├── payloads/                       # Request/response payloads
+│   │   │           ├── repositories/                   # Spring Data JPA repositories
+│   │   │           ├── services/                       # Service layer
+│   │   │           └── utilities/                      # Utility classes
+│   │   └── resources/
+│   │       ├── application.properties                  # Application configuration
+│   │       ├── static/                                 # Static resources
+│   │       └── templates/                              # Template files
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── scmbackend/
+│                   └── ScmBackendApplicationTests.java # Test class
+└── target/                   # Compiled bytecode and build artifacts
+```
+
+---
