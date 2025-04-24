@@ -1,0 +1,879 @@
+// Base end point
+request,
+
+Method: Get
+Url: http://localhost:8080/api/v1
+
+response:
+{
+  "_links": {
+    "roles": {
+      "href": "http://localhost:8080/api/v1/roles{?page,size,sort*}",
+      "templated": true
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/contacts{?page,size,sort*}",
+      "templated": true
+    },
+    "users": {
+      "href": "http://localhost:8080/api/v1/users{?page,size,sort*}",
+      "templated": true
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile"
+    }
+  }
+}
+
+// Get roles
+request,
+
+Method: Get
+Url: http://localhost:8080/api/v1/roles
+
+(this record by defualt create by spring application)response:
+{
+  "_embedded": {
+    "roles": [
+      {
+        "id": 1,
+        "role": "ROLE_ADMIN",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/roles/1"
+          },
+          "role": {
+            "href": "http://localhost:8080/api/v1/roles/1"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "role": "ROLE_USER",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/roles/2"
+          },
+          "role": {
+            "href": "http://localhost:8080/api/v1/roles/2"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/roles?page=0&size=10"
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile/roles"
+    }
+  },
+  "page": {
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "number": 0
+  }
+}
+
+// each post endpoint is block (excpect user create post endpoit) then if we hit any other endpoint we face 401 error
+// create roles when user not loggedin
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/roles
+body: {
+    "id": 1,
+    "name": "ROLE_USER"
+}
+
+response:
+{
+  "error": "Unauthorized access",
+  "message": "Full authentication is required to access this resource"
+}
+
+// create admin user change "2L" into "1L" in UserEventHandler.java
+request,
+
+Method: Post (allowed without authentication)
+Url: http://localhost:8080/api/v1/users
+body:
+
+{
+  "name": "Vishal",
+  "email": "vishal@gmail.com",
+  "password": "vishal@123",
+  "about": "It is an admin account.",
+  "profilePicture": "https://example.com/profiles/kumkum.jpg",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "roles": [
+    "http://localhost:8080/api/v1/roles/1"
+  ]
+}
+
+response: 201 created
+{
+  "id": "25267fc4-8115-4d3a-b264-f594fa5e9f4c",
+  "name": "Vishal",
+  "email": "vishal@gmail.com",
+  "password": "$2a$10$KFdYSsj4cA9g8NVfmjuEq.wGyxuY5lkXk.aLGUQBh0cMPJeGODPW6",
+  "about": "It is an admin account.",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "emailToken": null,
+  "avtar": null,
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/contacts"
+    },
+    "roles": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/roles"
+    }
+  }
+}
+
+// create normal user change "1L" into "2L" in UserEventHandler.java
+request,
+
+Method: Post (allowed without authentication)
+Url: http://localhost:8080/api/v1/users
+body:
+{
+  "name": "Kumkum",
+  "email": "kumkum@gmail.com",
+  "password": "kumkum@123",
+  "about": "It is a normal account.",
+  "profilePicture": "https://example.com/profiles/kumkum.jpg",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "roles": [
+    "http://localhost:8080/api/v1/roles/2"
+  ]
+}
+
+response:
+{
+  "id": "f090c7f1-1a89-441f-b7d5-23d34e5b5e6d",
+  "name": "Kumkum",
+  "email": "kumkum@gmail.com",
+  "password": "$2a$10$2txhLKLd1j/Yy0NLlsjFHu9ocvXqEnQ71eA1.hUXIcCx4YTNDrPD.",
+  "about": "It is a normal account.",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "emailToken": null,
+  "avtar": null,
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/contacts"
+    },
+    "roles": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/roles"
+    }
+  }
+}
+
+// login
+
+request:
+Method: Post
+Url: http://localhost:8080/auth/login
+body: {
+  "email": "vishal@gmail.com",
+  "password": "vishal@123"
+}
+
+response: 
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aXNoYWxAZ21haWwuY29tIiwiaWF0IjoxNzQ1NDA1NzM1LCJleHAiOjE3NDU0MDY2MzV9.5rlL1XJ7tXsxBWYstzTVO3T7t-cBfxvD1aFVYw1UZuY",
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aXNoYWxAZ21haWwuY29tIiwiaWF0IjoxNzQ1NDA1NzM1LCJleHAiOjE3NDU1Nzg1MzV9.2TEKqbvA8hrv8OWq2EwaF62UVEb3gXdHz-bSs-F9xbE",
+  "user": {
+    "id": "12fcbe23-4dfb-43e8-8916-f6de10591aa5",
+    "name": "Vishal",
+    "email": "vishal@gmail.com",
+    "password": "$2a$10$5J4nOKhyquFTg9Ioy.AkFerswpSD1FmmHn0r7IR/1hjOiFbcd.uI2",
+    "about": "It's Gopal's account about.",
+    "phoneNumber": "+917861230000",
+    "enabled": true,
+    "emailVerified": true,
+    "phoneVerified": false,
+    "provider": "SELF",
+    "emailToken": null,
+    "roles": [
+      {
+        "id": 3,
+        "role": "ROLE_USER"
+      }
+    ],
+    "contacts": [],
+    "avtar": null
+  }
+}
+
+// refresh token (create a new token)
+
+request,
+Method: Post
+Url: http://localhost:8080/auth/refresh-token
+body: {
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aXNoYWxAZ21haWwuY29tIiwiaWF0IjoxNzQ1NDA1NzM1LCJleHAiOjE3NDU0MDY2MzV9.5rlL1XJ7tXsxBWYstzTVO3T7t-cBfxvD1aFVYw1UZuY"
+}
+
+response:
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aXNoYWxAZ21haWwuY29tIiwiaWF0IjoxNzQ1NDA1ODc2LCJleHAiOjE3NDU0MDY3NzZ9.4YFM0-RgOcSBY9-ob21aRzTe6enOIQXJns62IC1vv1Y",
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleUpoYkdjaU9pSklVekkxTmlKOS5leUp6ZFdJaU9pSjJhWE5vWVd4QVoyMWhhV3d1WTI5dElpd2lhV0YwSWpveE56UTFOREExTnpNMUxDSmxlSEFpT2pFM05EVTBNRFkyTXpWOS41cmxMMVhKN3RYc3hCV1lzdHpUVk8zVDd0LWNCZnh2RDFhRlZZdzFVWnVZIiwiaWF0IjoxNzQ1NDA1ODc2LCJleHAiOjE3NDU1Nzg2NzZ9.2c77GuCfmiVvKI8r2dyDKcRlIsNPFs0xycS2vrT3KH4",
+  "user": {
+    "id": "12fcbe23-4dfb-43e8-8916-f6de10591aa5",
+    "name": "Vishal",
+    "email": "vishal@gmail.com",
+    "password": "$2a$10$5J4nOKhyquFTg9Ioy.AkFerswpSD1FmmHn0r7IR/1hjOiFbcd.uI2",
+    "about": "It's Gopal's account about.",
+    "phoneNumber": "+917861230000",
+    "enabled": true,
+    "emailVerified": true,
+    "phoneVerified": false,
+    "provider": "SELF",
+    "emailToken": null,
+    "roles": [
+      {
+        "id": 3,
+        "role": "ROLE_USER"
+      }
+    ],
+    "contacts": [],
+    "avtar": null
+  }
+}
+
+// create role (only admin user create a new role and ensure when token create then role is also is a paert of it)
+
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/roles
+body:
+{
+  "id":"3",
+  "role":"ROLE_CUSTOM"
+}
+
+HTTP Headers,
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sInN1YiI6InZpc2hhbEBnbWFpbC5jb20iLCJpYXQiOjE3NDU0MjU4NTksImV4cCI6MTc0NTQyNjc1OX0.GHCH6IG-TOemOnTLnmfFAO98n6GS4K5xwMY7TLbj7BM
+Content-Type: application/json
+
+response:
+{
+  "id": 3,
+  "role": "ROLE_CUSTOM",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/roles/3"
+    },
+    "role": {
+      "href": "http://localhost:8080/api/v1/roles/3"
+    }
+  }
+}
+
+
+// update user 
+
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d (at end we have user id)
+body: 
+{
+  "name": "Kumkum Dubey",
+  "email": "kumkum@gmail.com",
+  "password":"kumkum@123",
+  "about": "It is a normal account and user is kumkum.",
+  "profilePicture": "https://example.com/profiles/kumkum.jpg",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF"
+}
+
+Auth -> Bearer Token (get when user login) : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrdW1rdW1AZ21haWwuY29tIiwiaWF0IjoxNzQ1NDE3NDI2LCJleHAiOjE3NDU0MTgzMjZ9.czl4PVhCqreUUJHf4FI9cUt1-OeHhfISyJH0Rfw7Ih0
+
+response:
+{
+  "id": "f090c7f1-1a89-441f-b7d5-23d34e5b5e6d",
+  "name": "Kumkum Dubey",
+  "email": "kumkum@gmail.com",
+  "password": "$2a$10$AYM6OqfyyajYr15LiB8OCeH2GrztEMuCz0wuTZA7JdlgSJTtJ2hUm",
+  "about": "It is a normal account and user is kumkum.",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "emailToken": null,
+  "avtar": null,
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "roles": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/roles"
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/contacts"
+    }
+  }
+}
+
+// get user
+request,
+Method: Get
+Url: http://localhost:8080/api/v1/users
+Query Parameters: size=10,page=2
+response:
+{
+  "_embedded": {
+    "users": [
+      {
+        "id": "25267fc4-8115-4d3a-b264-f594fa5e9f4c",
+        "name": "Vishal",
+        "email": "vishal@gmail.com",
+        "password": "$2a$10$KFdYSsj4cA9g8NVfmjuEq.wGyxuY5lkXk.aLGUQBh0cMPJeGODPW6",
+        "about": "It is an admin account.",
+        "phoneNumber": "+917861230000",
+        "enabled": true,
+        "emailVerified": true,
+        "phoneVerified": false,
+        "provider": "SELF",
+        "emailToken": null,
+        "avtar": null,
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+          },
+          "roles": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/roles"
+          },
+          "contacts": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/contacts"
+          }
+        }
+      },
+      {
+        "id": "f090c7f1-1a89-441f-b7d5-23d34e5b5e6d",
+        "name": "Kumkum",
+        "email": "kumkum@gmail.com",
+        "password": "$2a$10$2txhLKLd1j/Yy0NLlsjFHu9ocvXqEnQ71eA1.hUXIcCx4YTNDrPD.",
+        "about": "It is a normal account.",
+        "phoneNumber": "+917861230000",
+        "enabled": true,
+        "emailVerified": true,
+        "phoneVerified": false,
+        "provider": "SELF",
+        "emailToken": null,
+        "avtar": null,
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+          },
+          "roles": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/roles"
+          },
+          "contacts": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/contacts"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users?page=0&size=10"
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile/users"
+    },
+    "search": {
+      "href": "http://localhost:8080/api/v1/users/search"
+    }
+  },
+  "page": {
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "number": 0
+  }
+}
+
+// create a contact
+request:
+Method: Post
+Url: http://localhost:8080/api/v1/contacts
+body: {
+  "name":"Dev Das",
+  "email":"dev@gmail.com",
+  "address":"dev Street",
+  "description":"It's dev account about.",
+  "pictureUrl":"https://example.com/profiles/kumkum.jpg",
+  "phoneNumber":"7894561230",
+  "facebookLink":"https://facebook.com",
+  "linkedinLink":"https://linkedin.in",
+  "favourite":"false",
+  "user_id":"65c4d2ef-78e3-49ef-b73f-9c63868dffd5",
+  "cloudinaryImagePublicId": "",
+  "user":"http://localhost:8080/api/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+}
+
+Auth -> Bearer Token -> eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrdW1rdW1AZ21haWwuY29tIiwiaWF0IjoxNzQ1NDE5MTM3LCJleHAiOjE3NDU0MjAwMzd9.PdUDbanLx0kJc53FUmn1HbQR8XJtu9Se4WFJ7RPoLlQ (get at the time of login)
+
+response: 201 created
+{
+  "id": "b3115aa9-32a0-4f45-8044-799c9d0d2e1e",
+  "name": "Dev Das",
+  "email": "dev@gmail.com",
+  "address": "dev Street",
+  "phoneNumber": "7894561230",
+  "pictureUrl": "https://example.com/profiles/kumkum.jpg",
+  "description": "It's dev account about.",
+  "facebookLink": "https://facebook.com",
+  "linkedinLink": "https://linkedin.in",
+  "favourite": false,
+  "cloudinaryImagePublicId": "",
+  "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/?_a=DAGAACAVZAA0",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "contact": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/user"
+    }
+  }
+}
+
+// get contact
+request:
+Method: Get
+Url: http://localhost:8080/api/v1/contacts
+
+response:
+{
+  "_embedded": {
+    "contacts": [
+      {
+        "id": "b3115aa9-32a0-4f45-8044-799c9d0d2e1e",
+        "name": "Dev Das",
+        "email": "dev@gmail.com",
+        "address": "dev Street",
+        "phoneNumber": "7894561230",
+        "pictureUrl": "https://example.com/profiles/kumkum.jpg",
+        "description": "It's dev account about.",
+        "facebookLink": "https://facebook.com",
+        "linkedinLink": "https://linkedin.in",
+        "favourite": false,
+        "cloudinaryImagePublicId": "",
+        "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/?_a=DAGAACAVZAA0",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+          },
+          "contact": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/user"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/contacts?page=0&size=10"
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile/contacts"
+    },
+    "search": {
+      "href": "http://localhost:8080/api/v1/contacts/search"
+    }
+  },
+  "page": {
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "number": 0
+  }
+}
+
+// update contact
+request:
+method: Post
+Url: http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e
+body: {
+  "name":"Dev Das Lover",
+  "email":"dev@gmail.com",
+  "address":"dev Street Lover",
+  "description":"It's dev das account about.",
+  "pictureUrl":"https://example.com/profiles/kumkum.jpg",
+  "phoneNumber":"7894561230",
+  "facebookLink":"https://facebook.com",
+  "linkedinLink":"https://linkedin.in",
+  "favourite":"false"
+}
+
+Auth -> Bearer Token -> eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrdW1rdW1AZ21haWwuY29tIiwiaWF0IjoxNzQ1NDE5ODI3LCJleHAiOjE3NDU0MjA3Mjd9.Ku9iSlCghGCUzS0jckwzgO6dmoyUQUyu7cAl4Z03EBk (get at the time of login)
+
+response: {
+  "id": "b3115aa9-32a0-4f45-8044-799c9d0d2e1e",
+  "name": "Dev Das Lover",
+  "email": "dev@gmail.com",
+  "address": "dev Street Lover",
+  "phoneNumber": "7894561230",
+  "pictureUrl": "https://example.com/profiles/kumkum.jpg",
+  "description": "It's dev das account about.",
+  "facebookLink": "https://facebook.com",
+  "linkedinLink": "https://linkedin.in",
+  "favourite": false,
+  "cloudinaryImagePublicId": null,
+  "avtar": null,
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "contact": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/user"
+    }
+  }
+}
+
+// user projection (to enable projection visit UserRepositry.java and include "@RepositoryRestResource(excerptProjection = UserProjection.class)") , use to get custom columns
+// to find projection url visit : http://localhost:8080/api/v1/users
+request:
+Method: Get
+Url: http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c?projection=user-projection
+to enable projection :
+1 -> explicitly enable in RestConfig.java
+
+response:
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c{?projection}",
+      "templated": true
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/contacts"
+    },
+    "roles": {
+      "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/roles"
+    }
+  },
+  "name": "Vishal Chouhan",
+  "id": "25267fc4-8115-4d3a-b264-f594fa5e9f4c",
+  "phoneNumber": "+917861230000",
+  "about": "It is an admin account and user is vishal.",
+  "email": "vishal@gmail.com"
+}
+
+// ensure scm folder exist on cloud
+
+// image upload in user (i'm directly open test.html file in browser without any server and put token in this file, thunderbolt not support multipart files in free version)
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/users/${userId}/upload
+
+response in browser,
+Image uploaded successfully: {"publicId":"scm/nokdk3acyjgsrp4q31gl","secureUrl":"https://res.cloudinary.com/dcvg6aj9u/image/upload/v1745466594/scm/nokdk3acyjgsrp4q31gl.jpg","format":"jpg"}
+
+// image upload in user (by postman free version)
+
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/upload
+Authorization -> Auth Type -> Bearer Token -> (Token get at time of login)
+Body -> form-data -> {Key -> userImage, type -> file}
+
+response:
+{
+    "publicId": "scm/mekmpfb21duuhhxogjst",
+    "secureUrl": "https://res.cloudinary.com/dcvg6aj9u/image/upload/v1745467180/scm/mekmpfb21duuhhxogjst.png",
+    "format": "png"
+}
+
+// by hiting this endpoint user avtar cloumn update by transform url
+like this: https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/mekmpfb21duuhhxogjst?_a=DAGAACAVZAA0
+
+// upload contact image by postman
+request,
+Method: Post
+Url: http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/upload
+Authorization -> Auth Type -> Bearer Token -> (Token get at time of login)
+Body -> form-data -> {Key -> contactImage, type -> file}
+
+response: 
+{
+    "publicId": "scm/abeiq1zgytqsovixgmnb",
+    "secureUrl": "https://res.cloudinary.com/dcvg6aj9u/image/upload/v1745468116/scm/abeiq1zgytqsovixgmnb.jpg",
+    "format": "jpg"
+}
+
+// contact automatically update with image url and id
+
+// and avtar image url is custom transform url automatically save in db, look like this : https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/abeiq1zgytqsovixgmnb?_a=DAGAACAVZAA0
+
+
+// get all user with image columns values
+
+Method: Get
+Url: http://localhost:8080/api/v1/users
+
+response:
+{
+  "_embedded": {
+    "users": [
+      {
+        "id": "25267fc4-8115-4d3a-b264-f594fa5e9f4c",
+        "name": "Vishal Chouhan",
+        "email": "vishal@gmail.com",
+        "password": "$2a$10$E5RhPc6k0xXWoc8dbY83K.LPGoZT6fybms5fTQV10UtkX1CDoMW/m",
+        "about": "It is an admin account and user is vishal.",
+        "phoneNumber": "+917861230000",
+        "enabled": true,
+        "emailVerified": true,
+        "phoneVerified": false,
+        "provider": "SELF",
+        "emailToken": null,
+        "avtar": null,
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c"
+          },
+          "roles": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/roles"
+          },
+          "contacts": {
+            "href": "http://localhost:8080/api/v1/users/25267fc4-8115-4d3a-b264-f594fa5e9f4c/contacts"
+          }
+        }
+      },
+      {
+        "id": "f090c7f1-1a89-441f-b7d5-23d34e5b5e6d",
+        "name": "Kumkum Dubey",
+        "email": "kumkum@gmail.com",
+        "password": "$2a$10$AYM6OqfyyajYr15LiB8OCeH2GrztEMuCz0wuTZA7JdlgSJTtJ2hUm",
+        "about": "It is a normal account and user is kumkum.",
+        "phoneNumber": "+917861230000",
+        "enabled": true,
+        "emailVerified": true,
+        "phoneVerified": false,
+        "provider": "SELF",
+        "emailToken": null,
+        "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/mekmpfb21duuhhxogjst?_a=DAGAACAVZAA0",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+          },
+          "roles": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/roles"
+          },
+          "contacts": {
+            "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/contacts"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users?page=0&size=10"
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile/users"
+    },
+    "search": {
+      "href": "http://localhost:8080/api/v1/users/search"
+    }
+  },
+  "page": {
+    "size": 10,
+    "totalElements": 2,
+    "totalPages": 1,
+    "number": 0
+  }
+}
+
+// get all contacts with image values
+Method: Get
+Url: http://localhost:8080/api/v1/contacts
+
+response:
+{
+  "_embedded": {
+    "contacts": [
+      {
+        "id": "b3115aa9-32a0-4f45-8044-799c9d0d2e1e",
+        "name": "Dev Das Lover",
+        "email": "dev@gmail.com",
+        "address": "dev Street Lover",
+        "phoneNumber": "7894561230",
+        "pictureUrl": "https://res.cloudinary.com/dcvg6aj9u/image/upload/v1745468116/scm/abeiq1zgytqsovixgmnb.jpg",
+        "description": "It's dev das account about.",
+        "facebookLink": "https://facebook.com",
+        "linkedinLink": "https://linkedin.in",
+        "favourite": false,
+        "cloudinaryImagePublicId": "scm/abeiq1zgytqsovixgmnb",
+        "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/abeiq1zgytqsovixgmnb?_a=DAGAACAVZAA0",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+          },
+          "contact": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+          },
+          "user": {
+            "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/user"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/contacts?page=0&size=10"
+    },
+    "profile": {
+      "href": "http://localhost:8080/api/v1/profile/contacts"
+    },
+    "search": {
+      "href": "http://localhost:8080/api/v1/contacts/search"
+    }
+  },
+  "page": {
+    "size": 10,
+    "totalElements": 1,
+    "totalPages": 1,
+    "number": 0
+  }
+}
+
+// a bug are there
+// when i am login with user kumkum and try to upload image of user vishal with his id they it possible (means any user login they upload image for any user if they know user id) and second thing when we update image for a user then old image still present on cloud
+
+// delete contact
+Method: delete
+Url: http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e
+Auth -> Bearer Token -> (token get at time of login)
+
+response:
+{
+  "id": "b3115aa9-32a0-4f45-8044-799c9d0d2e1e",
+  "name": "Dev Das Lover",
+  "email": "dev@gmail.com",
+  "address": "dev Street Lover",
+  "phoneNumber": "7894561230",
+  "pictureUrl": "https://res.cloudinary.com/dcvg6aj9u/image/upload/v1745468116/scm/abeiq1zgytqsovixgmnb.jpg",
+  "description": "It's dev das account about.",
+  "facebookLink": "https://facebook.com",
+  "linkedinLink": "https://linkedin.in",
+  "favourite": false,
+  "cloudinaryImagePublicId": "scm/abeiq1zgytqsovixgmnb",
+  "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/abeiq1zgytqsovixgmnb?_a=DAGAACAVZAA0",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "contact": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/contacts/b3115aa9-32a0-4f45-8044-799c9d0d2e1e/user"
+    }
+  }
+}
+
+// contact deleted from db
+
+// delete user
+method: delete
+url: http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d
+Auth -> Bearer Token -> (token get at time of login)
+
+response:
+{
+  "id": "f090c7f1-1a89-441f-b7d5-23d34e5b5e6d",
+  "name": "Kumkum Dubey",
+  "email": "kumkum@gmail.com",
+  "password": "$2a$10$AYM6OqfyyajYr15LiB8OCeH2GrztEMuCz0wuTZA7JdlgSJTtJ2hUm",
+  "about": "It is a normal account and user is kumkum.",
+  "phoneNumber": "+917861230000",
+  "enabled": true,
+  "emailVerified": true,
+  "phoneVerified": false,
+  "provider": "SELF",
+  "emailToken": null,
+  "avtar": "https://res.cloudinary.com/dcvg6aj9u/image/upload/c_fill,h_400,w_400/v1/scm/mekmpfb21duuhhxogjst?_a=DAGAACAVZAA0",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "user": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d"
+    },
+    "roles": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/roles"
+    },
+    "contacts": {
+      "href": "http://localhost:8080/api/v1/users/f090c7f1-1a89-441f-b7d5-23d34e5b5e6d/contacts"
+    }
+  }
+}
+
+// user logout automatically when token is expired

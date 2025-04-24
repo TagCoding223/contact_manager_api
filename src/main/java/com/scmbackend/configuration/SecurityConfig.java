@@ -26,13 +26,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.csrf(AbstractHttpConfigurer::disable); // csrf use when our frontend genreated from backend
+        // httpSecurity.csrf(AbstractHttpConfigurer::disable); // csrf use when our frontend genreated from backend
+        httpSecurity
+            .cors() // Enable CORS
+            .and()
+            .csrf().disable()
+            .httpBasic();
         
         httpSecurity.authorizeHttpRequests(auth -> {
             auth.requestMatchers(HttpMethod.POST,"/api/v1/roles").hasRole("ADMIN");
             auth.requestMatchers(HttpMethod.GET,"/api/v1/**").permitAll(); // is it safe (i think if someone get the user details then their decryt the password and perform hacking (solution may be -> when try to get user details for login just check it backend side )) , i'm think too much i change the reposnce they get by user it time of login
             // auth.requestMatchers("/api/v1/**").hasAnyRole("ADMIN","GUEST");
-            auth.requestMatchers(HttpMethod.POST,"/api/v1/users/**").permitAll();
+            auth.requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll(); // it is only allow to create a user 
             // auth.requestMatchers("/api/v1/**").permitAll();
             auth.requestMatchers("/api/v1/**").authenticated();
             auth.anyRequest().permitAll();

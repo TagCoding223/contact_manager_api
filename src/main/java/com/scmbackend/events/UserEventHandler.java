@@ -34,7 +34,8 @@ public class UserEventHandler {
         // call when user create first time
         logger.debug("User handler before created(going to create user object).");
         user.setId(UUID.randomUUID().toString());
-        Role role = roleRepositry.findById(3L).orElseThrow(() -> new RuntimeException("Role not found."));
+        // TODO: if you want to create an admin account then change "2L" to "1L"
+        Role role = roleRepositry.findById(2L).orElseThrow(() -> new RuntimeException("Role not found.")); 
         user.getRoles().add(role);
         user.setPassword(passwordEncoder.encode(user.getPassword())); // i comment it because i need to encrpty password
                                                                       // when new user create and update that why i use

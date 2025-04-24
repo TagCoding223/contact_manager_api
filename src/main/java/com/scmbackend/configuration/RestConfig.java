@@ -8,7 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.scmbackend.entities.Contact;
+import com.scmbackend.entities.Role;
 import com.scmbackend.entities.User;
+// import com.scmbackend.repositories.projections.UserProjection;
 
 @Configuration
 public class RestConfig {
@@ -22,7 +24,7 @@ public class RestConfig {
                 config.setBasePath(AppConstants.REST_BASE_PATH);
                 config.setDefaultPageSize(AppConstants.PAGE_SIZE);
                 config.setDefaultMediaType(MediaType.APPLICATION_JSON);
-                config.exposeIdsFor(User.class,Contact.class);
+                config.exposeIdsFor(User.class,Contact.class,Role.class);
                 // config.getProjectionConfiguration().addProjection(UserProjection.class); // use when projecject folder iutside of repositories folder
             }
         };

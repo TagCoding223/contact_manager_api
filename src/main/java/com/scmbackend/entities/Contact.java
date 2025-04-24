@@ -2,6 +2,9 @@ package com.scmbackend.entities;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.scmbackend.services.HelperSingletonService;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -55,6 +58,11 @@ public class Contact {
 
     @ManyToOne
     private User user;
+
+     @JsonProperty
+    public String avtar(){
+        return HelperSingletonService.getImageUploadService().generateTransformImageUrl(cloudinaryImagePublicId);
+    }
 }
 
 // to create a user the format of json body is:

@@ -18,6 +18,10 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.scmbackend.services.HelperSingletonService;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -51,7 +55,11 @@ public class User {
 
 //    @Column(columnDefinition = "text")
     @Lob
+    @JsonIgnore
     private String profilePicture;
+
+    @JsonIgnore
+    private String cloudinaryImagePublicId;
 
     @Column(nullable = false)
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number must be valid.")
@@ -78,4 +86,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Contact> contacts = new LinkedHashSet<>();
+
+    @JsonProperty
+    public String avtar(){
+        return HelperSingletonService.getImageUploadService().generateTransformImageUrl(cloudinaryImagePublicId);
+    }
 }

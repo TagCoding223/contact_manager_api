@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolation;
@@ -59,4 +62,12 @@ public class GlobalExceptionHandler {
         responce.put("message", exception.getMessage());
         return new ResponseEntity<>(responce, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // @ExceptionHandler(value = MultipartException.class)
+    // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    // @ResponseBody
+    // public String handleFileUploadingError(MultipartException exception) {
+    //     logger.warn("Failed to upload attachment", exception);
+    //     return exception.getMessage();
+    // }
 }
