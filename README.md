@@ -157,6 +157,7 @@ The project follows a standard Maven-based structure:
 ```
 scm_backend/
 ├── .env                      # Environment variables (not included in version control)
+├── .vscode/                  # VS Code workspace settings
 ├── endpoints.txt             # API endpoint details
 ├── HELP.md                   # Additional help documentation
 ├── mvnw, mvnw.cmd            # Maven wrapper scripts
@@ -191,3 +192,4 @@ scm_backend/
 ```
 
 ---
+````
